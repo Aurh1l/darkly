@@ -45,6 +45,11 @@ root:8621ffdbc5698829397d97767ac13db3 - dragon
 go to url/admin
 ~flag d19b4823e0d5600ceed56d5e896ef328d7a2b9e7ac7e80f4fcdb9b10bcb3e7ff~
 
+* Member survey :
+
+modifier les parametres post dans le browser en mettant 42
+~flag 03a944b434d5baff05f46c4bede5792551a2595574bcafc9a6e25f67c382ccaa~
+
 
 
 Database: Member_Brute_Force
