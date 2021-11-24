@@ -63,6 +63,9 @@ modifier les parametres post dans le browser en mettant 42
 
 * Feedback :
 ~flag - 0fbb54bbf7d099713ca4be297e1bc7da0173d8b3c21c1811b916a3a86652724e~
+* Hidden directory :
+crawl le directory avec crawl.sh
+~flag - 99dde1d35d1fdd283924d84e6d9f1d820~
 
 * Upload image :
 Upload un fichier .php, remplacer le content type de la requete par image/jpeg
