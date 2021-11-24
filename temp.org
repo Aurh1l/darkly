@@ -63,6 +63,7 @@ modifier les parametres post dans le browser en mettant 42
 
 * Feedback :
 ~flag - 0fbb54bbf7d099713ca4be297e1bc7da0173d8b3c21c1811b916a3a86652724e~
+
 * Hidden directory :
 crawl le directory avec crawl.sh
 ~flag - 99dde1d35d1fdd283924d84e6d9f1d820~
@@ -70,6 +71,12 @@ crawl le directory avec crawl.sh
 * Upload image :
 Upload un fichier .php, remplacer le content type de la requete par image/jpeg
 ~flag - 46910d9ce35b385885a9f7e2b336249d622f29b267a1771fbacf52133beddba8~
+
+* Request from :
+You must comming from : "https://www.nsa.gov/" to go to the next step
+Changer le referrer de la requete et le user agent
+~flag - f2a29020ef3132e01dd61df97fd33ec8d7fcd1388cc9601e7db691d17d4d6188~
+
 
 λ ~/gitlab/darkly/ main* ffuf -w ~/tmp/directory-list-2.3-medium.txt -u 'http://192.168.56.102/FUZZ'
 
