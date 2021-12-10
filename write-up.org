@@ -1,4 +1,6 @@
 #+TITLE: Write Up for Darkly project
+#+AUTHOR: paure
+#+OPTIONS: _:nil
 
 * Prerequesite
 
@@ -91,7 +93,7 @@ It's possible to upload an image on the page http://192.168.56.105/?page=upload 
 3. change the request, *Content-Type: text/php* by *Content-Type: images/jpeg*
 4. send and look at the response
 ** Protection
-Looking at the header is not enough.
+Looking at the header is not enough.The application should perform filtering and content checking on any files which are uploaded to the server. Files should be thoroughly scanned and validated before being made available to other users. If in doubt, the file should be discarded.
 * xss_stored
 ** Vulnerability
 On the page http://192.168.56.103/index.php?page=feedback  it's possible for the users to leave feedbacks. Any comments leads to XSS and gives the flag. This is exagerated but real XSS attacks can lead to serious threats on websites, it can steal cookies, make request for any users who visite the page ...
@@ -127,7 +129,7 @@ Parameterized queries are a means of pre-compiling an SQL statement so that you 
 ** Vulnerability
 There is a login page, http://192.168.56.103/index.php?page=signin. We does not know any creds so we can bruteforce it.
 
-1. ~hydra -l admin -P /usr/share/SecLists/Passwords/Common-Credentials/top-passwords-shortlist.txt '192.168.56.103' http-get-form '/index.php:page=signin&username=^USER^&password=^PASS^&Login=Login:F=images/WrongAnswer.gif' -I -F~ We try each password in the file.txt for the username admin until the response does not containt 'WrongAnswer.gif'.
- 2. log-in as admin:shadow
+1. ~hydra -I -F -l admin -P ./bruteforce_login_page/ressources/top-passwords-shortlist.txt '192.168.56.105' http-get-form '/index.php:page=signin&username=^USER^&password=^PASS^&Login=Login:F=images/WrongAnswer.gif'~ We try each password in the file.txt for the username admin until the response does not containt 'WrongAnswer.gif'.
+2. login as *admin:shadow*
 ** Protection
 Use strict policy for passwords ! Also, block the ip address who make too many requests.
